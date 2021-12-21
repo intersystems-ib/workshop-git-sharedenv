@@ -13,7 +13,7 @@ In the instance, you will find:
 
 # Configure git-source-control
 
-## (a). Create ssh key
+## (a). Create ssh key
 [git-source-control](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments) will use ssh key to communicate from the IRIS shared instance to your remote git repository.
 
 `irisuser` is the user that is executing IRIS processes in our shared instance.
@@ -83,7 +83,7 @@ cd /home/irisuser/repo/prod
 git clone git@github.com:yourgithubuser/iris-shared-repo.git PROD
 ```
 
-## Configure source control in IRIS 
+## Configure source control in IRIS 
 
 ### DEV
 * Open a terminal session as `developer1` and run git source control configuration:
@@ -136,8 +136,8 @@ Settings saved.
 * Commit changes
 * Push changes to GitHub (dev branch)
 
-## Deploy changes from DEV to LIVE
+## Deploy changes from DEV to PROD
 * In GitHub, create a Pull request from dev branch to main branch
 * Merge pull request
-* In Studio/VS Code, move to LIVE namespace, and Pull changes from remote branch and Import All.
+* In Studio/VS Code, move to PROD namespace, and Pull changes from remote branch and Import All.
 * Check that changes are now deployed in TEST environment.

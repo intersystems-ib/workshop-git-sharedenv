@@ -1,0 +1,9 @@
+{
+	"folders": [
+		{
+			"name": "isfs_iris",
+			"uri": "isfs://default~iris:USER/"
+		}
+	],
+	"settings": {}
+}

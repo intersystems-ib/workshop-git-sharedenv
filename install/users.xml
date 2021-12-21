@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<UsersExport>
+  <Users>
+    <AccountNeverExpires>true</AccountNeverExpires>
+    <AutheEnabled>0</AutheEnabled>
+    <ChangePassword>false</ChangePassword>
+    <CreateDateTime>66099,33888.090107</CreateDateTime>
+    <CreateUsername>SuperUser</CreateUsername>
+    <Enabled>true</Enabled>
+    <ExpirationDate>1840-12-31</ExpirationDate>
+    <Flags>1</Flags>
+    <HOTPKey>HBb2tjVUUseLoJ7MGGzmP3uk5C0=</HOTPKey>
+    <HOTPKeyGenerate>false</HOTPKeyGenerate>
+    <HOTPKeyDisplay>false</HOTPKeyDisplay>
+    <LastModifiedDateTime>66099,33900.968897</LastModifiedDateTime>
+    <LastModifiedInfo>
+Roles modified:
+  New value: %All
+  Old value: 
+</LastModifiedInfo>
+    <LastModifiedUsername>SuperUser</LastModifiedUsername>
+    <Name>developer1</Name>
+    <Password>X0UPgfpxOv78jumPvqpGHln3PJGMiBE7b5eWjE9QeBdVrxdwRZwk49xPpsNmgLqX6LqIyuPqKDU21vRw+VaNvg==</Password>
+    <PasswordNeverExpires>true</PasswordNeverExpires>
+    <PasswordChangedDateTime>66099,33888.090129</PasswordChangedDateTime>
+    <PasswordReset>false</PasswordReset>
+    <Roles>
+      <RolesItem>%All</RolesItem>
+    </Roles>
+    <Salt>7Kh9asToMJW1QF3ivN5YTA4Fap5Ut7BNd8xx9bW44OeI4m7o9p3p0QpLtlKjzX7tGgpVoJvQORMvW0xdy8vgdg==</Salt>
+    <PasswordHashAlgorithm>SHA512</PasswordHashAlgorithm>
+    <PasswordHashWorkFactor>10000</PasswordHashWorkFactor>
+  </Users>
+  <SQLRoleGrantOption>
+    <UserOrRole>developer1</UserOrRole>
+    <RoleGranted>%All</RoleGranted>
+    <Grantable>0</Grantable>
+  </SQLRoleGrantOption>
+</UsersExport>

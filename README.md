@@ -58,7 +58,7 @@ git config --global user.email "your@email.com"
 git config --global user.name "yourname"
 ```
 
-### DEV
+### DEV
 * Clone your repository
 * Create a first commit on the main branch to initilize the repo.
 * Create a "dev" branch and push it to GitHub.

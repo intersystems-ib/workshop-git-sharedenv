@@ -136,7 +136,7 @@ Settings saved.
 * Commit changes
 * Push changes to GitHub (dev branch)
 
-## Deploy changes from DEV to LIVE
+## Deploy changes from DEV to LIVE
 * In GitHub, create a Pull request from dev branch to main branch
 * Merge pull request
 * In Studio/VS Code, move to LIVE namespace, and Pull changes from remote branch and Import All.

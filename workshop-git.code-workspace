@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "isfs_DEV",
+			"uri": "isfs://workshop-git~iris:DEV/"
+		},
+		{
+			"name": "isfs_PROD",
+			"uri": "isfs://workshop-git~iris:PROD/"
+		}
+	],
+	"settings": {}
+}

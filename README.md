@@ -13,6 +13,8 @@ In the instance, you will find:
 
 # Configure git-source-control
 
+<img src="img/scenario.png" />
+
 ## (a). Create ssh key
 [git-source-control](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments) will use ssh key to communicate from the IRIS shared instance to your remote git repository.
 
@@ -58,7 +60,7 @@ git config --global user.email "your@email.com"
 git config --global user.name "yourname"
 ```
 
-### DEV
+### (b.1) Clone you repository for DEV environment
 * Clone your repository
 * Create a first commit on the main branch to initilize the repo.
 * Create a "dev" branch and push it to GitHub.
@@ -66,6 +68,7 @@ git config --global user.name "yourname"
 ```
 cd /home/irisuser/repo
 git clone git@github.com:yourgithubuser/iris-shared-repo.git DEV
+cd DEV
 echo "# README" >> README.md
 git add README.md
 git commit -m "first commit"
@@ -74,18 +77,18 @@ git checkout -b "dev"
 git push --set-upstream origin dev
 ```
 
-### PROD
+### (b.2) Clone you repository for PROD environment
 * Clone your repository
 * We will be using main branch for our production environment.
 
 ```
-cd /home/irisuser/repo/prod
+cd /home/irisuser/repo
 git clone git@github.com:yourgithubuser/iris-shared-repo.git PROD
 ```
 
-## Configure source control in IRIS 
+# (c) Configure source control in IRIS 
 
-### DEV
+## (c.1) Configure DEV namespace for source control
 * Open a terminal session as `developer1` and run git source control configuration:
 ```
 irisuser@51e2506c043c:~$ iris session iris
@@ -104,7 +107,7 @@ Attribution: Email address for user 'irisowner': your-github-email
 Settings saved.
 ```
 
-### PROD
+## (c.2) Configure PROD namespace for source control
 * Open a terminal session as `developer1` and run git source control configuration:
 ```
 irisuser@51e2506c043c:~$ iris session iris
@@ -123,20 +126,47 @@ Attribution: Email address for user 'irisowner': your-github-email
 Settings saved.
 ```
 
-# Connect using Studio
+# (d) Connect using Studio
+* Connect to IRIS instance using Studio as usual
+* Notice that when entering `DEV` or `PROD` namespace, you have a new available Git menu on the toolbar.
 
-# Connect using VS Code
+<img src="img/studio-git-menu.png" />
 
-# Make changes and deploy them
 
-## Make some changes in DEV
+# (e) Connect using VS Code
+* Setup IRIS instance configuration using VS Code as usual using InterSystems Server Manager plugin. Save your connection using some name like `workshop-git~iris`.
+* Create a VS Code workspace file like this:
+```
+{
+	"folders": [
+		{
+			"name": "isfs_DEV",
+			"uri": "isfs://workshop-git~iris:DEV/"
+		},
+		{
+			"name": "isfs_PROD",
+			"uri": "isfs://workshop-git~iris:PROD/"
+		}
+	],
+	"settings": {}
+}
+```
+* In VS Code, open the workspace file you have just created using File > Open Workspace file.
+* In your workspace, you will have available Git menu options as well.
+
+
+# (f) Make changes and deploy them
+
+## (f.1) Make some changes in DEV
+Using Git command menus and Git UI try to:
 * Connect to `DEV` namespace
 * Create some classes (e.g. `MyApp/Test`, `MyApp/Info`).
 * Add classes
+* Create a Production, a Data Transform or a Business Process. Notice that you have available Git actions from the Management Portal as well
 * Commit changes
 * Push changes to GitHub (dev branch)
 
-## Deploy changes from DEV to PROD
+## (f.2) Deploy changes from DEV to PROD
 * In GitHub, create a Pull request from dev branch to main branch
 * Merge pull request
 * In Studio/VS Code, move to PROD namespace, and Pull changes from remote branch and Import All.

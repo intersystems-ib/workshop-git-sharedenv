@@ -170,4 +170,4 @@ Using Git command menus and Git UI try to:
 * In GitHub, create a Pull request from dev branch to main branch
 * Merge pull request
 * In Studio/VS Code, move to PROD namespace, and Pull changes from remote branch and Import All.
-* Check that changes are now deployed in TEST environment.
+* Check that changes are now deployed in PROD environment.

@@ -1,8 +1,10 @@
-FROM intersystemsdc/irishealth-community:2021.1.0.215.3-zpm
+FROM intersystemsdc/irishealth-community:2021.2.0.649.0-zpm
 
 USER root
 
 # install tools
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Madrid
 RUN apt-get update && apt-get install -y \
   software-properties-common \
   openssh-client \

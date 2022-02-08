@@ -18,11 +18,11 @@ In the instance, you will find:
 ## (a). Create ssh key
 [git-source-control](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments) will use ssh key to communicate from the IRIS shared instance to your remote git repository.
 
-`irisuser` is the user that is executing IRIS processes in our shared instance.
+`irisowner` is the user that is executing IRIS processes in our shared instance.
 
-* Open session in container as `irisuser`:
+* Open session in container as `irisowner`:
 ```
-docker exec -u irisuser -it iris-shared bash
+docker exec -it iris-shared bash
 ```
 
 * Create ssh key:
@@ -30,7 +30,7 @@ docker exec -u irisuser -it iris-shared bash
 ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
 
-* Add private key to `irisuser` ssh config:
+* Add private key to `irisowner` ssh config:
 ```
 vi ~/.ssh/config
 ``` 
@@ -39,21 +39,21 @@ Contents of ~/.ssh/config:
 ```
 Host github.com
  HostName github.com
- IdentityFile /home/irisuser/.ssh/id_ed25519
+ IdentityFile /home/irisowner/.ssh/id_ed25519
 ```
 
 ## (b). Create/Clone a git repository for your code
 
 Create a git repository ([GitHub](https://github.com)) for the code in the shared instance (e.g. `iris-shared-repo`). We will use different branches to represent each environment.
 
-* Add the public part of your ssh key (e.g. `/home/irisuser/.ssh/id_ed25519.pub`) in GitHub using https://github.com/settings/keys. This will allow to use the ssh key to work with your repository.
+* Add the public part of your ssh key (e.g. `/home/irisowner/.ssh/id_ed25519.pub`) in GitHub using https://github.com/settings/keys. This will allow to use the ssh key to work with your repository.
 
-* As `irisuser`, create a directory for each environment. We will clone the repo for each environment, as each one of them will be working in a different branch.
+* As `irisowner`, create a directory for each environment. We will clone the repo for each environment, as each one of them will be working in a different branch.
 ```
-mkdir -p /home/irisuser/repo
+mkdir -p /home/irisowner/repo
 ```
 
-* As `irisuser`, clone your repository in every directory. You will be using your configured ssh key:
+* As `irisowner`, clone your repository in every directory. You will be using your configured ssh key:
 
 ```
 git config --global user.email "your@email.com"
@@ -66,7 +66,7 @@ git config --global user.name "yourname"
 * Create a "dev" branch and push it to GitHub.
 
 ```
-cd /home/irisuser/repo
+cd /home/irisowner/repo
 git clone git@github.com:yourgithubuser/iris-shared-repo.git DEV
 cd DEV
 echo "# README" >> README.md
@@ -82,7 +82,7 @@ git push --set-upstream origin dev
 * We will be using main branch for our production environment.
 
 ```
-cd /home/irisuser/repo
+cd /home/irisowner/repo
 git clone git@github.com:yourgithubuser/iris-shared-repo.git PROD
 ```
 
@@ -91,15 +91,18 @@ git clone git@github.com:yourgithubuser/iris-shared-repo.git PROD
 ## (c.1) Configure DEV namespace for source control
 * Open a terminal session as `developer1` and run git source control configuration:
 ```
-irisuser@51e2506c043c:~$ iris session iris
+irisowner@51e2506c043c:~$ iris session iris
+USER>do $system.Security.Login("developer1")
+USER>write $username
+developer1
 USER>zn "DEV"
 DEV>do ##class(SourceControl.Git.API).Configure()
 Configured SourceControl.Git.Extension as source control class for namespace DEV
 Configured default mappings for classes, routines, and include files. You can customize these in the global:
      ^SYS("SourceControl","Git","settings","mappings")
 Path to git executable: /usr/bin/git
-Local git repo root folder: c:\temp\USER/ => /home/irisuser/repo/DEV
-Path to private key file (for ssh remotes): /home/irisuser/.ssh/id_ed25519
+Local git repo root folder: c:\temp\USER/ => /home/irisowner/repo/DEV
+Path to private key file (for ssh remotes): /home/irisowner/.ssh/id_ed25519
 Event handler class for git pull: 
   SourceControl.Git.PullEventHandler.Default => 
 Attribution: Git username for user 'irisowner': your-github-user
@@ -110,15 +113,18 @@ Settings saved.
 ## (c.2) Configure PROD namespace for source control
 * Open a terminal session as `developer1` and run git source control configuration:
 ```
-irisuser@51e2506c043c:~$ iris session iris
+irisowner@51e2506c043c:~$ iris session iris
+USER>do $system.Security.Login("developer1")
+USER>write $username
+developer1
 USER>zn "PROD"
 PROD>do ##class(SourceControl.Git.API).Configure()
 Configured SourceControl.Git.Extension as source control class for namespace PROD
 Configured default mappings for classes, routines, and include files. You can customize these in the global:
      ^SYS("SourceControl","Git","settings","mappings")
 Path to git executable: /usr/bin/git
-Local git repo root folder: c:\temp\USER/ => /home/irisuser/repo/PROD
-Path to private key file (for ssh remotes): /home/irisuser/.ssh/id_ed25519
+Local git repo root folder: c:\temp\USER/ => /home/irisowner/repo/PROD
+Path to private key file (for ssh remotes): /home/irisowner/.ssh/id_ed25519
 Event handler class for git pull: 
   SourceControl.Git.PullEventHandler.Default => 
 Attribution: Git username for user 'irisowner': your-github-user

@@ -44,7 +44,7 @@ Host github.com
 
 ## (b). Create/Clone a git repository for your code
 
-Create a git repository ([GitHub](https://github.com)) for the code in the shared instance (e.g. `iris-shared-repo`). We will use different branches to represent each environment.
+* Create a git repository ([GitHub](https://github.com)) for the code in the shared instance (e.g. `iris-shared-repo`). We will use different branches to represent each environment.
 
 * Add the public part of your ssh key (e.g. `/home/irisowner/.ssh/id_ed25519.pub`) in GitHub using https://github.com/settings/keys. This will allow to use the ssh key to work with your repository.
 

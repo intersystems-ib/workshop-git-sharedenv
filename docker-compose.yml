@@ -12,3 +12,4 @@ services:
     volumes:
 #      - ./iris.key:/usr/irissys/mgr/iris.key
       - ./shared:/shared
+    command: --check-caps false

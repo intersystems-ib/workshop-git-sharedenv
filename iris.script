@@ -1,0 +1,21 @@
+    // unexpire passwords for dev mode
+    new $namespace
+    set $namespace = "%SYS"
+    do ##class(Security.Users).UnExpireUserPasswords("*")
+
+    // install zpm
+    set r=##class(%Net.HttpRequest).%New(),r.Server="pm.community.intersystems.com",r.SSLConfiguration="ISC.FeatureTracker.SSL.Config" d r.Get("/packages/zpm/latest/installer"),$system.OBJ.LoadStream(r.HttpResponse.Data,"c")
+
+    // load installer
+    do $SYSTEM.OBJ.Load("/opt/irisapp/Installer.cls", "ck")
+
+    // setup environment (namespaces, users, etc.)
+    set sc = ##class(App.Installer).Run(.vars)
+
+    // install git-source-control package (zpm)
+    set $namespace = "DEV"
+    zpm "install git-source-control"  
+    set $namespace = "PROD"
+    zpm "install git-source-control"
+
+    halt

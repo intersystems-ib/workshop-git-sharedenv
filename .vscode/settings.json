@@ -1,11 +1,11 @@
 {
     "objectscript.conn": {
-        "active": true,
+        "active": false,
         "ns": "USER",
         "username": "superuser",
         "server": "default~iris",
         "docker-compose": {
-            "service": "iris"
+            "service": "iris-shared"
         },
         "links": {
             "SOAP Wizard": "${serverUrl}/isc/studio/templates/%25ZEN.Template.AddInWizard.SOAPWizard.cls?Namespace=${namespace}${serverAuth}",

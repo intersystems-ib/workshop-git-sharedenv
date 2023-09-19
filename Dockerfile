@@ -1,4 +1,5 @@
-FROM intersystemsdc/irishealth-community:2022.1.0.209.0-zpm
+ARG IMAGE=containers.intersystems.com/intersystems/irishealth-community:2023.1.0.229.0
+FROM $IMAGE
 
 USER root
 
@@ -16,28 +17,21 @@ RUN apt-get update && apt-get install -y \
   git \
   && rm -rf /var/lib/apt/lists/*
 
-COPY --chown=$ISC_PACKAGE_IRISMGR:$ISC_PACKAGE_IRISGROUP irissession.sh /
-RUN chmod +x /irissession.sh
+# create directory to copy files into image
+WORKDIR /opt/irisapp
+RUN chown -R irisowner:irisowner /opt/irisapp
 
-USER ${ISC_PACKAGE_MGRUSER}
+USER irisowner
 
-# copy files to container
-COPY install /opt/irisapp/install
-COPY src /opt/irisapp/src
+# copy files to image
+WORKDIR /opt/irisapp
+RUN mkdir -p /opt/irisapp/db
+COPY --chown=irisowner:irisowner iris.script iris.script
+COPY --chown=irisowner:irisowner src src
+COPY --chown=irisowner:irisowner install install
+COPY --chown=irisowner:irisowner Installer.cls Installer.cls
 
-SHELL ["/irissession.sh"]
-RUN \
-  zn "%SYS" \
-  do $SYSTEM.OBJ.Load("/opt/irisapp/src/Workshop/Installer.cls", "ck") \
-  # setup environment (namespaces, users, etc.)
-  set sc = ##class(Workshop.Installer).Run(.vars) \
-  # install git-source-control package (zpm)
-  zn "DEV" \
-  zpm "install git-source-control" \  
-  zn "PROD" \
-  zpm "install git-source-control" \ 
-  set sc = 1
-  
-# bringing the standard shell back
-SHELL ["/bin/bash", "-c"]
-CMD [ "-l", "/usr/irissys/mgr/messages.log" ]
+# run iris.script
+RUN iris start IRIS \
+    && iris session IRIS < /opt/irisapp/iris.script \
+    && iris stop IRIS quietly

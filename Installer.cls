@@ -1,4 +1,4 @@
-Class Workshop.Installer Extends %RegisteredObject
+Class App.Installer Extends %RegisteredObject
 {
 
 XData Install [ XMLNamespace = INSTALLER ]

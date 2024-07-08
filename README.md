@@ -165,4 +165,4 @@ do ##class(SourceControl.Git.API).Configure()
 
 Now you can connect to your PROD namespace and pull changes from `main` branch:
 
-<imgr src="img/vscode-deploy-changes-main.gif" width="600" />
+<img src="img/vscode-deploy-changes-main.gif" width="600" />

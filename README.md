@@ -15,7 +15,7 @@ In the instance, you will find:
 * User: `developer1` / `test`
 
 
-# Server-side editing in VS Code
+# Server-side editing in VS Code
 
 Setup IRIS server-side editing in VS Code.
 
@@ -131,7 +131,7 @@ Choose **2) Clone** and enter the **SSH** URL of your GitHub repository. This sh
 git@github.com:<your-github-user-name>/iris-shared-repo.git
 ```
 
-## Setup Git in PROD namespace
+## Setup Git in PROD namespace
 
 Run a similar setup but for PROD namespace:
 

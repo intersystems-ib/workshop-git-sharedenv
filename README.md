@@ -1,5 +1,8 @@
-InterSystems IRIS shared envinroment using git source control.
+InterSystems IRIS shared environment using git source control with server-side editing in VS Code.
+
 We will be using [git-source-control](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments). You can find more information on [Git for Shared Development Environments](https://community.intersystems.com/post/git-shared-development-environments).
+
+<img src="img/scenario.png" />
 
 # Setup
 Run the container we will use as our IRIS shared instance:
@@ -9,171 +12,157 @@ docker-compose up -d
 
 In the instance, you will find:
 * Namespaces: `DEV` (development), `PROD` (production). 
-* Users: `developer1/test`
-
-# Configure git-source-control
-
-<img src="img/scenario.png" />
-
-## (a). Create ssh key
-[git-source-control](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments) will use ssh key to communicate from the IRIS shared instance to your remote git repository.
-
-`irisowner` is the user that is executing IRIS processes in our shared instance.
-
-* Open session in container as `irisowner`:
-```
-docker exec -it iris-shared bash
-```
-
-* Create ssh key:
-```
-ssh-keygen -t ed25519 -C "your_email@example.com"
-```
-
-* Add private key to `irisowner` ssh config:
-```
-vi ~/.ssh/config
-``` 
-
-Contents of ~/.ssh/config:
-```
-Host github.com
- HostName github.com
- IdentityFile /home/irisowner/.ssh/id_ed25519
-```
-
-## (b). Create/Clone a git repository for your code
-
-* Create a git repository ([GitHub](https://github.com)) for the code in the shared instance (e.g. `iris-shared-repo`). We will use different branches to represent each environment.
-
-* Add the public part of your ssh key (e.g. `/home/irisowner/.ssh/id_ed25519.pub`) in GitHub using https://github.com/settings/keys. This will allow to use the ssh key to work with your repository.
-
-* As `irisowner`, create a directory for each environment. We will clone the repo for each environment, as each one of them will be working in a different branch.
-```
-mkdir -p /home/irisowner/repo
-```
-
-* As `irisowner`, clone your repository in every directory. You will be using your configured ssh key:
-
-```
-git config --global user.email "your@email.com"
-git config --global user.name "yourname"
-```
-
-### (b.1) Clone you repository for DEV environment
-* Clone your repository
-* Create a first commit on the main branch to initilize the repo.
-* Create a "dev" branch and push it to GitHub.
-
-```
-cd /home/irisowner/repo
-git clone git@github.com:yourgithubuser/iris-shared-repo.git DEV
-cd DEV
-echo "# README" >> README.md
-git add README.md
-git commit -m "first commit"
-git push
-git checkout -b "dev"
-git push --set-upstream origin dev
-```
-
-### (b.2) Clone you repository for PROD environment
-* Clone your repository
-* We will be using main branch for our production environment.
-
-```
-cd /home/irisowner/repo
-git clone git@github.com:yourgithubuser/iris-shared-repo.git PROD
-```
-
-# (c) Configure source control in IRIS 
-
-## (c.1) Configure DEV namespace for source control
-* Open a terminal session as `developer1` and run git source control configuration:
-```
-irisowner@51e2506c043c:~$ iris session iris
-USER>do $system.Security.Login("developer1")
-USER>write $username
-developer1
-USER>zn "DEV"
-DEV>do ##class(SourceControl.Git.API).Configure()
-Configured SourceControl.Git.Extension as source control class for namespace DEV
-Configured default mappings for classes, routines, and include files. You can customize these in the global:
-     ^SYS("SourceControl","Git","settings","mappings")
-Path to git executable: /usr/bin/git
-Local git repo root folder: c:\temp\USER/ => /home/irisowner/repo/DEV
-Path to private key file (for ssh remotes): /home/irisowner/.ssh/id_ed25519
-Event handler class for git pull: 
-  SourceControl.Git.PullEventHandler.Default => 
-Attribution: Git username for user 'irisowner': your-github-user
-Attribution: Email address for user 'irisowner': your-github-email
-Settings saved.
-```
-
-## (c.2) Configure PROD namespace for source control
-* Open a terminal session as `developer1` and run git source control configuration:
-```
-irisowner@51e2506c043c:~$ iris session iris
-USER>do $system.Security.Login("developer1")
-USER>write $username
-developer1
-USER>zn "PROD"
-PROD>do ##class(SourceControl.Git.API).Configure()
-Configured SourceControl.Git.Extension as source control class for namespace PROD
-Configured default mappings for classes, routines, and include files. You can customize these in the global:
-     ^SYS("SourceControl","Git","settings","mappings")
-Path to git executable: /usr/bin/git
-Local git repo root folder: c:\temp\USER/ => /home/irisowner/repo/PROD
-Path to private key file (for ssh remotes): /home/irisowner/.ssh/id_ed25519
-Event handler class for git pull: 
-  SourceControl.Git.PullEventHandler.Default => 
-Attribution: Git username for user 'irisowner': your-github-user
-Attribution: Email address for user 'irisowner': your-github-email
-Settings saved.
-```
-
-# (d) Connect using Studio
-* Connect to IRIS instance using Studio as usual
-* Notice that when entering `DEV` or `PROD` namespace, you have a new available Git menu on the toolbar.
-
-<img src="img/studio-git-menu.png" />
+* User: `developer1` / `test`
 
 
-# (e) Connect using VS Code
-* Setup IRIS instance configuration using VS Code as usual using InterSystems Server Manager plugin. Save your connection using some name like `workshop-git~iris`.
-* Create a VS Code workspace file like this:
-```
+# Server-side editing in VS Code
+
+Setup IRIS server-side editing in VS Code.
+
+The code in your shared environment will be edited this way.
+
+* Open VS Code
+* Install InterSystems ObjectScript Extension Pack
+
+<img src="img/vscode-extension-1.png" width="400" />
+
+<img src="img/vscode-extension-2.png" width="400" />
+
+* Click on InterSystems icon
+* Add a Server configuration
+workshop-git-shared-iris
+
+<img src="img/vscode-create-iris-server.gif" width="600" />
+
+* Open Server
+* Edit Dev namespace
+* Edit Prod namespace
+
+<img src="img/vscode-connect-server-side-iris.gif" width="600" />
+
+* Save as VS Code workspace. Save it to a file called "test.code-workspace"
+
+<img src="img/vscode-save-workspace.png" width="200" />
+
+The contents of the file will be something like this:
+
+```json
 {
 	"folders": [
 		{
-			"name": "isfs_DEV",
-			"uri": "isfs://workshop-git~iris:DEV/"
+			"name": "workshop-iris-shared-git:DEV",
+			"uri": "isfs://workshop-iris-shared-git:dev/"
 		},
 		{
-			"name": "isfs_PROD",
-			"uri": "isfs://workshop-git~iris:PROD/"
+			"name": "workshop-iris-shared-git:PROD",
+			"uri": "isfs://workshop-iris-shared-git:prod/"
 		}
-	],
-	"settings": {}
+	]
 }
 ```
-* In VS Code, open the workspace file you have just created using File > Open Workspace file.
-* In your workspace, you will have available Git menu options as well.
+
+Now you can access the code of both IRIS namespaces from your VS Code workspace.
+
+# Create a GitHub repo
+
+Create a new repository in your GitHub account. You will use this repository to store the code for DEV and PROD.
+
+You can name it something like `iris-shared-repo`.
+
+<img src="img/github-create-repo.png" width="600" />
 
 
-# (f) Make changes and deploy them
+# Set up Git Source Control in IRIS
 
-## (f.1) Make some changes in DEV
-Using Git command menus and Git UI try to:
-* Connect to `DEV` namespace
-* Create some classes (e.g. `MyApp/Test`, `MyApp/Info`).
-* Add classes
-* Create a Production, a Data Transform or a Business Process. Notice that you have available Git actions from the Management Portal as well
-* Commit changes
-* Push changes to GitHub (dev branch)
+You will set up [Git for Shared Environments](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments) package in InterSystems IRIS.
 
-## (f.2) Deploy changes from DEV to PROD
-* In GitHub, create a Pull request from dev branch to main branch
-* Merge pull request
-* In Studio/VS Code, move to PROD namespace, and Pull changes from remote branch and Import All.
-* Check that changes are now deployed in PROD environment.
+It is already installed, but you could install it simply running: 
+
+```objectscript
+zpm "install git-source-control" 
+```
+
+Open a InterSystems terminal in VS Code so you can run the next sections:
+
+<img src="img/vscode-iris-terminal.gif" width="600" />
+
+
+## Setup Git in DEV namespace
+
+Run [Git for Shared Environments](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments) setup:
+
+```objectscript
+do ##class(SourceControl.Git.API).Configure()
+```
+
+* Path to git executable: `/usr/bin/git`
+* Local git repo root folder: `/home/irisowner/repo/DEV/`
+* Path to private key file for SSH remotes; if file does not exist, later prompts will help set it up with proper ownership: `/home/irisowner/.ssh/id_ed25519`
+* Default value for the remaining settings
+
+### Create an SSH key pair
+You will be asked if you want to create an SSH key pair. This key will be needed to connect to your GitHub repository securely using SSH.
+
+* Create an SSH key pair? `Yes`
+* Copy the **Public Key** for your generated SSH key pair
+
+```console
+Public key (for use as "deploy key", etc.):
+ssh-ed25519 <somekey> developer1@bf3016a8ae64
+```
+
+* Add the **Public key** to your GitHub https://github.com/settings/keys so you authorize connections using that key.
+
+### Clone repository
+
+Last step of setup let us you choose what do you want to do with the directory we have just specified:
+
+```console
+1) Initialize empty repo
+2) Clone...
+3) Do nothing
+
+No git repo exists in /home/irisowner/repo/DEV/. Choose an option:
+```
+
+Choose **2) Clone** and enter the **SSH** URL of your GitHub repository. This should be something like:
+
+```console
+git@github.com:<your-github-user-name>/iris-shared-repo.git
+```
+
+## Setup Git in PROD namespace
+
+Run a similar setup but for PROD namespace:
+
+```objectscript
+zn "PROD"
+do ##class(SourceControl.Git.API).Configure()
+```
+
+* Path to git executable: `/usr/bin/git`
+* Local git repo root folder: `/home/irisowner/repo/PROD/`
+* Path to private key file for SSH remotes; if file does not exist, later prompts will help set it up with proper ownership: `/home/irisowner/.ssh/id_ed25519`
+* Default value for the remaining settings
+
+
+# Work with VS Code, IRIS and Git
+
+## Make some changes in DEV namespace
+
+* When you connect to DEV namespace, new Git options will appear in VS Code command line.
+* You can also open Git UI.
+* We are going to create a local `dev` branch and add a new class:
+
+<img src="img/vscode-git-create-change-dev.gif" width="600" />
+
+* After pushing `dev` branch to GitHub remote, create a Pull Request so changes will be merged into `main` branch.
+
+<img src="img/github-pull-request.gif" width="600" />
+
+
+# Deploy changes in main into PROD namespace
+
+Now you can connect to your PROD namespace and pull changes from `main` branch:
+
+<imgr src="img/vscode-deploy-changes-main.gif" width="600" />

@@ -87,7 +87,7 @@ Open a InterSystems terminal in VS Code so you can run the next sections:
 <img src="img/vscode-iris-terminal.gif" width="600" />
 
 
-## Setup Git in DEV namespace
+## Setup Git in DEV namespace
 
 Run [Git for Shared Environments](https://openexchange.intersystems.com/package/Git-for-Shared-Development-Environments) setup:
 
